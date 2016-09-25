@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import LoanCalc from 'loan-calc'
+import {Chart} from 'react-google-charts'
 
 class Loans extends Component{
   constructor(props){
@@ -123,6 +124,15 @@ class Loans extends Component{
                   </p>
                   <p>Monthly Payment: {loan.monthlyPayment}</p>
                   <p>Total Interest: {loan.interestTotal}</p>
+                  <Chart chartType="PieChart"
+                  data={[
+                    ['Principal', 'Interest'],
+                    ['Principal', loan.principal],
+                    ['Interest', loan.interestTotal]
+                  ]}
+                  width={"100%"}
+                  height={"400px"}
+                  legend_toggle={true} />
               </div>
       } else {
         return <div key={index}>
@@ -141,6 +151,15 @@ class Loans extends Component{
                   </p>
                   <p>Monthly Payment: {loan.monthlyPayment}</p>
                   <p>Total Interest: {loan.interestTotal}</p>
+                  <Chart chartType="PieChart"
+                  data={[
+                    ['Principal', 'Interest'],
+                    ['Principal', loan.principal],
+                    ['Interest', loan.interestTotal]
+                  ]}
+                  width={"100%"}
+                  height={"400px"}
+                  legend_toggle={true} />
               </div>
       }
     })
