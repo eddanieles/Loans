@@ -8,15 +8,21 @@ class Loans extends Component{
       loans: [{type: 'Home',
                 principal: 200000,
                       rate: 5,
-                      months: 360},
+                      months: 360,
+                    monthlyPayment: 1073.64,
+                  interestTotal: 186511.57},
               {type: 'Auto',
                 principal: 15000,
                      rate: 3.5,
-                     months: 48},
+                     months: 48,
+                   monthlyPayment: 335.34,
+                 interestTotal: 1096.32},
               {type: 'Student',
                 principal: 40000,
                         rate: 8.9,
-                        months: 120}]
+                        months: 120,
+                      monthlyPayment: 504.54,
+                    interestTotal: 20544.9}]
     }
   }
   handlePrincipal(loan, index, event){
@@ -26,7 +32,17 @@ class Loans extends Component{
           return {type: loan.type,
                   principal: parseInt(event.target.value, 10),
                   rate: loan.rate,
-                  months: loan.months};
+                  months: loan.months,
+                monthlyPayment: LoanCalc.paymentCalc({
+                    amount: parseInt(event.target.value, 10),
+                    rate: loan.rate,
+                    termMonths: loan.months
+                }),
+              interestTotal: LoanCalc.totalInterest({
+                  amount: parseInt(event.target.value, 10),
+                  rate: loan.rate,
+                  termMonths: loan.months
+              })};
         } else {
           return item;
         }
@@ -39,8 +55,18 @@ class Loans extends Component{
         if (item.type === loan.type){
           return {type: loan.type,
                   principal: loan.principal,
-                  rate: parseInt(event.target.value, 10),
-                  months: loan.months};
+                  rate: parseFloat(event.target.value, 10),
+                  months: loan.months,
+                monthlyPayment: LoanCalc.paymentCalc({
+                    amount: loan.principal,
+                    rate: parseFloat(event.target.value, 10),
+                    termMonths: loan.months
+                }),
+              interestTotal: LoanCalc.totalInterest({
+                  amount: loan.principal,
+                  rate: parseFloat(event.target.value, 10),
+                  termMonths: loan.months
+              })};
         } else {
           return item;
         }
@@ -54,7 +80,17 @@ class Loans extends Component{
           return {type: loan.type,
                   principal: loan.principal,
                   rate: loan.rate,
-                  months: parseInt(event.target.value, 10)};
+                  months: parseInt(event.target.value, 10),
+                monthlyPayment: LoanCalc.paymentCalc({
+                    amount: loan.principal,
+                    rate: loan.rate,
+                    termMonths: parseInt(event.target.value, 10)
+                }),
+              interestTotal: LoanCalc.totalInterest({
+                  amount: loan.principal,
+                  rate: loan.rate,
+                  termMonths: parseInt(event.target.value, 10)
+              })};
         } else {
           return item;
         }
@@ -85,22 +121,14 @@ class Loans extends Component{
                   <input type='range' min={1} max={78} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
                   {loan.months}
                   </p>
-                  <p>Monthly Payment: {LoanCalc.paymentCalc({
-                      amount: loan.principal,
-                      rate: loan.rate,
-                      termMonths: loan.months
-                  })}</p>
-                  <p>Total Interest: {LoanCalc.totalInterest({
-                      amount: loan.principal,
-                      rate: loan.rate,
-                      termMonths: loan.months
-                  })}</p>
+                  <p>Monthly Payment: {loan.monthlyPayment}</p>
+                  <p>Total Interest: {loan.interestTotal}</p>
               </div>
       } else {
         return <div key={index}>
                   <h3>{loan.type}</h3>
                   <p>Principal
-                  <input type='range' min={100} max={200000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
+                  <input type='range' min={100} max={300000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
                   {loan.principal}
                   </p>
                   <p>Rate
@@ -111,16 +139,8 @@ class Loans extends Component{
                   <input type='range' min={1} max={360} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
                   {loan.months}
                   </p>
-                  <p>Monthly Payment: {LoanCalc.paymentCalc({
-                      amount: loan.principal,
-                      rate: loan.rate,
-                      termMonths: loan.months
-                  })}</p>
-                  <p>Total Interest: {LoanCalc.totalInterest({
-                      amount: loan.principal,
-                      rate: loan.rate,
-                      termMonths: loan.months
-                  })}</p>
+                  <p>Monthly Payment: {loan.monthlyPayment}</p>
+                  <p>Total Interest: {loan.interestTotal}</p>
               </div>
       }
     })
