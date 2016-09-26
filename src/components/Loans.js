@@ -24,7 +24,14 @@ class Loans extends Component{
                         rate: 8.9,
                         months: 120,
                       monthlyPayment: 504.54,
-                    interestTotal: 20544.9}]
+                    interestTotal: 20544.9},
+                 {type: 'Miscellaneous',
+                   principal: 6600,
+                           rate: 8,
+                           months: 60,
+                         monthlyPayment: 133.82,
+                       interestTotal: 1429.45}],
+        totalLoanPayment: 1913.52
     }
   }
   handlePrincipal(loan, index, event){
@@ -50,7 +57,8 @@ class Loans extends Component{
         }
       }
     );
-    this.setState({loans: newArray });
+    let currentPayment = newArray.map((loan, index) => loan.monthlyPayment).reduce((total, current) => total + current);
+    this.setState({loans: newArray, totalLoanPayment: currentPayment});
   }
   handleRate(loan, index, event){
     let newArray = this.state.loans.map((item, index) => {
@@ -74,7 +82,8 @@ class Loans extends Component{
         }
       }
     );
-    this.setState({loans: newArray });
+    let currentPayment = newArray.map((loan, index) => loan.monthlyPayment).reduce((total, current) => total + current);
+    this.setState({loans: newArray, totalLoanPayment: currentPayment});
   }
   handleMonths(loan, index, event){
     let newArray = this.state.loans.map((item, index) => {
@@ -98,13 +107,18 @@ class Loans extends Component{
         }
       }
     );
-    this.setState({loans: newArray });
+    let currentPayment = newArray.map((loan, index) => loan.monthlyPayment).reduce((total, current) => total + current);
+    this.setState({loans: newArray, totalLoanPayment: currentPayment});
   }
   componentDidMount() {
       this.rebaseRef = base.syncState(`${localStorage.UID}/myLoans`, {
           context: this,
           state: 'loans',
           asArray: true
+      });
+      this.rebaseRef = base.syncState(`${localStorage.UID}/myExpenses/3/1`, {
+          context: this,
+          state: 'totalLoanPayment'
       });
       // base.update(`${localStorage.UID}/myLoans`, {
       //   data: this.state.loans
@@ -125,15 +139,15 @@ class Loans extends Component{
         return <div key={index}>
                   <h3>{loan.type}</h3>
                   <p>Principal
-                  <input type='range' min={100} max={50000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
+                  <input type='range' value={loan.principal} min={100} max={50000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
                   {loan.principal}
                   </p>
                   <p>Rate
-                  <input type='range' min={.1} max={20} step={.1} onChange={this.handleRate.bind(this, loan, index)}/>
+                  <input type='range' value={loan.rate} min={.1} max={20} step={.1} onChange={this.handleRate.bind(this, loan, index)}/>
                   {loan.rate}
                   </p>
                   <p>Months
-                  <input type='range' min={1} max={78} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
+                  <input type='range' value={loan.months} min={1} max={78} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
                   {loan.months}
                   </p>
                   <p>Monthly Payment: {loan.monthlyPayment}</p>
@@ -152,15 +166,15 @@ class Loans extends Component{
         return <div key={index}>
                   <h3>{loan.type}</h3>
                   <p>Principal
-                  <input type='range' min={100} max={300000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
+                  <input type='range' value={loan.principal} min={100} max={300000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
                   {loan.principal}
                   </p>
                   <p>Rate
-                  <input type='range' min={.1} max={20} step={.1} onChange={this.handleRate.bind(this, loan, index)}/>
+                  <input type='range' value={loan.rate} min={.1} max={20} step={.1} onChange={this.handleRate.bind(this, loan, index)}/>
                   {loan.rate}
                   </p>
                   <p>Months
-                  <input type='range' min={1} max={360} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
+                  <input type='range' value={loan.months} min={1} max={360} step={1} onChange={this.handleMonths.bind(this, loan, index)}/>
                   {loan.months}
                   </p>
                   <p>Monthly Payment: {loan.monthlyPayment}</p>
@@ -181,6 +195,7 @@ class Loans extends Component{
       <div>
         <h1>Loans</h1>
         {currentLoans}
+        <h3>Total Monthly Loan Payment: {this.state.totalLoanPayment}</h3>
       </div>
     )
   }
