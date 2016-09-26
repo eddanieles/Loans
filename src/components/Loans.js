@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import LoanCalc from 'loan-calc'
 import {Chart} from 'react-google-charts'
+import base from '../config/base'
 
 class Loans extends Component{
   constructor(props){
@@ -98,6 +99,19 @@ class Loans extends Component{
       }
     );
     this.setState({loans: newArray });
+  }
+  componentDidMount() {
+      this.rebaseRef = base.syncState(`${localStorage.UID}/myLoans`, {
+          context: this,
+          state: 'loans',
+          asArray: true
+      });
+      // base.update(`${localStorage.UID}/myLoans`, {
+      //   data: this.state.loans
+      // });
+  }
+  componentWillUnmount() {
+      base.removeBinding(this.rebaseRef);
   }
   render(){
     // console.log(this.state.loans.map((loan, index) =>
