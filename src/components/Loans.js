@@ -7,31 +7,8 @@ class Loans extends Component{
   constructor(props){
     super(props);
     this.state = {
-      loans: [{type: 'Home',
-                principal: 200000,
-                      rate: 5,
-                      months: 360,
-                    monthlyPayment: 1073.64,
-                  interestTotal: 186511.57},
-              {type: 'Auto',
-                principal: 15000,
-                     rate: 3.5,
-                     months: 48,
-                   monthlyPayment: 335.34,
-                 interestTotal: 1096.32},
-              {type: 'Student',
-                principal: 40000,
-                        rate: 8.9,
-                        months: 120,
-                      monthlyPayment: 504.54,
-                    interestTotal: 20544.9},
-                 {type: 'Miscellaneous',
-                   principal: 6600,
-                           rate: 8,
-                           months: 60,
-                         monthlyPayment: 133.82,
-                       interestTotal: 1429.45}],
-        totalLoanPayment: 1913.52
+      loans: [],
+        totalLoanPayment: 0
     }
   }
   handlePrincipal(loan, index, event){
@@ -42,12 +19,12 @@ class Loans extends Component{
                   principal: parseInt(event.target.value, 10),
                   rate: loan.rate,
                   months: loan.months,
-                monthlyPayment: LoanCalc.paymentCalc({
+                monthlyPayment: parseInt(event.target.value, 10) === 0 ? 0 : LoanCalc.paymentCalc({
                     amount: parseInt(event.target.value, 10),
                     rate: loan.rate,
                     termMonths: loan.months
                 }),
-              interestTotal: LoanCalc.totalInterest({
+              interestTotal: parseInt(event.target.value, 10) === 0 ? 0 : LoanCalc.totalInterest({
                   amount: parseInt(event.target.value, 10),
                   rate: loan.rate,
                   termMonths: loan.months
@@ -139,7 +116,7 @@ class Loans extends Component{
         return <div key={index}>
                   <h3>{loan.type}</h3>
                   <p>Principal
-                  <input type='range' value={loan.principal} min={100} max={50000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
+                  <input type='range' value={loan.principal} min={0} max={50000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
                   {loan.principal}
                   </p>
                   <p>Rate
@@ -166,7 +143,7 @@ class Loans extends Component{
         return <div key={index}>
                   <h3>{loan.type}</h3>
                   <p>Principal
-                  <input type='range' value={loan.principal} min={100} max={300000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
+                  <input type='range' value={loan.principal} min={0} max={300000} step={100} onChange={this.handlePrincipal.bind(this, loan, index)}/>
                   {loan.principal}
                   </p>
                   <p>Rate
@@ -195,7 +172,7 @@ class Loans extends Component{
       <div>
         <h1>Loans</h1>
         {currentLoans}
-        <h3>Total Monthly Loan Payment: {this.state.totalLoanPayment}</h3>
+        <h3>Total Monthly Payment towards Loans: {this.state.totalLoanPayment}</h3>
       </div>
     )
   }
